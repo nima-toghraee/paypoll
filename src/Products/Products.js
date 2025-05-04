@@ -1,6 +1,7 @@
 const products = [
   {
     code: "product1",
+    name: "کلاه",
     id: 1,
     price: 20000,
   },
