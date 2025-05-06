@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProductCode from "./Pages/ProductCode";
 import User from "./Pages/User";
+import UserInfo from "./Pages/UserInfo";
 
 export default function App() {
   return (
@@ -8,6 +9,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<ProductCode />} />
         <Route path="/user" element={<User />} />
+        <Route path="/userForm" element={<UserInfo />} />
       </Routes>
     </BrowserRouter>
   );
