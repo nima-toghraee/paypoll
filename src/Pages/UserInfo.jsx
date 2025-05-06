@@ -22,7 +22,7 @@ export default function UserInfo() {
   const onSubmit = (data) => {
     console.log("اطلاعات خرید:", { product, user: data });
     // هدایت به سایت پرداخت فرضی
-    window.location.href = "https://example.com/payment";
+    navigate("/payment", { state: { product, user: data } });
   };
 
   const onCancel = () => {
