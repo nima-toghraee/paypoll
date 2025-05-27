@@ -4,9 +4,23 @@ export default function User() {
   const { state } = useLocation();
   const product = state?.product;
   const navigate = useNavigate();
+  const isLoggedIn = sessionStorage.getItem("userLoggedIn") === "true";
 
   const handlePurchase = () => {
-    navigate("/userForm", { state: { product } });
+    if (!isLoggedIn) {
+      navigate("/user-login", { state: { from: "/user", product } });
+      return;
+    }
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const existing = cart.find((item) => item.code === product.code);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("محصول به سبد خرید اضافه شد");
+    navigate("/cart");
   };
 
   const handleBack = () => {
@@ -40,6 +54,12 @@ export default function User() {
             className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
           >
             بازگشت
+          </button>
+          <button
+            onClick={() => navigate("/cart")}
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          >
+            سبد خرید
           </button>
         </div>
       )}

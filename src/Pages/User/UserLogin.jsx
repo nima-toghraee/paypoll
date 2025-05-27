@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function AdminLogin() {
+export default function UserLogin() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -10,20 +10,25 @@ export default function AdminLogin() {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    const validUsername = "admin";
-    const validPassword = "123456";
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const isValid = users.some(
+      (user) => user.username === username && user.password === password
+    );
 
-    if (username === validUsername && password === validPassword) {
-      localStorage.setItem("adminLoggedIn", "true");
-      navigate("/admin");
+    if (isValid) {
+      sessionStorage.setItem("userLoggedIn", "true");
+      sessionStorage.setItem("currentUser", username);
+      navigate("/");
     } else {
       setError("نام کاربری یا رمز ورود اشتباه است");
     }
   };
 
+  const handleBack = () => navigate("/user-signup");
+
   return (
     <div className="max-w-md mx-auto p-4 text-right" dir="rtl">
-      <h1 className="text-xl font-bold mb-4">ورود ادمین</h1>
+      <h1 className="text-xl font-bold mb-4">ورود کاربر</h1>
       <form onSubmit={handleLogin} className="space-y-4">
         <div>
           <label className="block mb-2">اسم کاربری</label>
@@ -52,6 +57,13 @@ export default function AdminLogin() {
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
             ورود
+          </button>
+          <button
+            type="button"
+            onClick={handleBack}
+            className="w-full bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors duration-200"
+          >
+            ثبت‌ نام
           </button>
         </div>
       </form>

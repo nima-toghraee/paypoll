@@ -1,11 +1,12 @@
 import { useState } from "react";
-import products from "../Products/Products";
-import { useNavigate } from "react-router-dom";
+import products from "../../Products/Products";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function ProductCode() {
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const isLoggedIn = sessionStorage.getItem("userLoggedIn") === "true";
 
   const handleSubmit = () => {
     setError("");
@@ -18,7 +19,36 @@ export default function ProductCode() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4">
+    <div className="max-w-5xl mx-auto p-6 text-right font-sans" dir="rtl">
+      <div className="flex gap-4 mb-8">
+        <Link
+          to="/user-login"
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+        >
+          ورود
+        </Link>
+        <Link
+          to="/user-signup"
+          className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
+        >
+          ثبت‌نام
+        </Link>
+        <Link
+          to="/cart"
+          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+        >
+          سبد خرید
+        </Link>
+
+        {isLoggedIn && (
+          <Link
+            to="/dashboard"
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+          >
+            داشبورد
+          </Link>
+        )}
+      </div>
       <h1 className="text-xl font-bold mb-4 text-right">
         کد محصول را وارد نمایید
       </h1>
