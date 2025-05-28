@@ -10,6 +10,8 @@ import UserSignup from "./Pages/User/UserSignup";
 import UserLogin from "./Pages/User/UserLogin";
 import Cart from "./Pages/User/cart";
 import Dashboard from "./Pages/User/Dashboard/Dashboard";
+import ListUsers from "./Pages/Admin/AdminSidebar/ListUsers";
+import AdminChat from "./Pages/Admin/AdminHeader/AdminChat";
 
 export default function App() {
   return (
@@ -25,7 +27,9 @@ export default function App() {
         <Route path="/user-signup" element={<UserSignup />} />
         <Route path="/user-Login" element={<UserLogin />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/admin/users" element={<ListUsers />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/admin/chat/:username" element={<AdminChat />} />
       </Routes>
     </BrowserRouter>
   );

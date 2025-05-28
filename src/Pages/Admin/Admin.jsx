@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AdminSidebar from "./AdminSidebar/AdminSidebar";
+import AdminHeader from "./AdminHeader/AdminHeader";
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -26,11 +28,6 @@ export default function Admin() {
     localStorage.setItem("purchases", JSON.stringify(updatedPurchases));
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("adminLoggedIn");
-    navigate("/admin-login");
-  };
-
   const filteredPurchases = purchases.filter(
     (purchase) =>
       purchase &&
@@ -52,14 +49,9 @@ export default function Admin() {
 
   return (
     <div className="max-w-5xl mx-auto p-6 text-right font-sans" dir="rtl">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-800">پنل ادمین</h1>
-        <button
-          onClick={handleLogout}
-          className="bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors duration-200"
-        >
-          خروج
-        </button>
+      <AdminSidebar />
+      <div className="flex justify-between items-center mb-8 ml-8">
+        <AdminHeader />
       </div>
 
       {/* search code  */}

@@ -21,7 +21,7 @@ export default function Header() {
         </Link>
         <span className="text-gray-600">خوش آمدید، {username}</span>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 pl-10">
         {" "}
         <Link to="/cart" className="text-gray-600 hover:text-blue-600">
           <svg
@@ -41,7 +41,7 @@ export default function Header() {
         </Link>
         <button
           onClick={handleLogout}
-          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+          className=" bg-red-600 text-white  px-4 py-2 rounded-lg hover:bg-red-700"
         >
           خروج
         </button>

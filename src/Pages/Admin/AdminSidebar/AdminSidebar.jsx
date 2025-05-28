@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Chat from "./Chat";
+import { Link } from "react-router-dom";
 
-export default function Sidebar() {
+export default function AdminSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
 
@@ -11,7 +11,7 @@ export default function Sidebar() {
     <>
       <button
         onClick={toggleSidebar}
-        className="fixed top-4 left-4 z-50 bg-blue-600 text-white p-2 rounded-lg md:block"
+        className="fixed top-10 left-4 z-50 bg-blue-600 text-white p-2 rounded-lg md:block"
       >
         ☰
       </button>
@@ -30,12 +30,7 @@ export default function Sidebar() {
 
         <ul className="space-y-4">
           <li>
-            <button
-              onClick={() => setChatOpen(true)}
-              className="block text-gray-600 hover:text-blue-600 w-full text-right"
-            >
-              چت با ادمین
-            </button>
+            <Link to="/admin/users">کاربران</Link>
           </li>
         </ul>
       </nav>
@@ -46,8 +41,6 @@ export default function Sidebar() {
           onClick={toggleSidebar}
         />
       )}
-
-      <Chat isOpen={chatOpen} onClose={() => setChatOpen(false)} />
     </>
   );
 }

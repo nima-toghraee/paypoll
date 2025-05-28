@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
-export default function Chat({ isOpen, onClose }) {
+export default function AdminChat() {
+  const { username } = useParams();
+  const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [chatMessages, setChatMessages] = useState(
     JSON.parse(localStorage.getItem("chatMessages") || "[]")
@@ -10,21 +13,26 @@ export default function Chat({ isOpen, onClose }) {
     localStorage.setItem("chatMessages", JSON.stringify(chatMessages));
   }, [chatMessages]);
 
+  const filteredMessages = chatMessages.filter(
+    (msg) =>
+      (msg.sender === username && msg.receiver === "admin") ||
+      (msg.sender === "admin" && msg.receiver === username)
+  );
+
   const handleSendMessage = () => {
     if (!message.trim()) return;
-    const currentUser = localStorage.getItem("currentUser") || "user";
     const newMessage = {
       id: Date.now(),
       text: message,
-      sender: currentUser,
-      receiver: "admin",
+      sender: "admin",
+      receiver: username,
       timestamp: new Date().toLocaleString("fa-IR"),
     };
     setChatMessages([...chatMessages, newMessage]);
     setMessage("");
   };
 
-  if (!isOpen) return null;
+  const handleClose = () => navigate("/admin/users");
 
   return (
     <div
@@ -33,9 +41,9 @@ export default function Chat({ isOpen, onClose }) {
     >
       <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-xl">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-gray-800">چت با ادمین</h2>
+          <h2 className="text-xl font-bold text-gray-800">چت با {username}</h2>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="text-gray-600 hover:text-gray-800"
           >
             ✕
@@ -43,12 +51,12 @@ export default function Chat({ isOpen, onClose }) {
         </div>
 
         <div className="max-h-60 overflow-y-auto mb-4">
-          {chatMessages.length > 0 ? (
-            chatMessages.map((msg) => (
+          {filteredMessages.length > 0 ? (
+            filteredMessages.map((msg) => (
               <div
                 key={msg.id}
                 className={`p-2 mb-2 rounded-lg ${
-                  msg.sender === localStorage.getItem("currentUser")
+                  msg.sender === "admin"
                     ? "bg-blue-100 text-right"
                     : "bg-gray-200 text-left"
                 }`}
