@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import Header from "./Header";
 import { Sidebar } from "./Sidebar";
+import UserHeader from "./UserHeader";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -13,11 +13,7 @@ export default function Dashboard() {
   return (
     <div>
       <div>
-        <Header />
-      </div>
-
-      <div>
-        <Sidebar />
+        <UserHeader />
       </div>
     </div>
   );

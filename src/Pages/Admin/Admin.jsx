@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar/AdminSidebar";
 import AdminHeader from "./AdminHeader/AdminHeader";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -10,13 +11,12 @@ export default function Admin() {
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
-  const isLoggedIn = localStorage.getItem("adminLoggedIn") === "true";
-
+  const { isLoggedIn, currentUser } = useContext(AuthContext);
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn || currentUser !== "admin") {
       navigate("/admin-login");
     }
-  }, [isLoggedIn, navigate]);
+  }, [isLoggedIn, navigate, currentUser]);
 
   const handleToggleShipped = (purchaseId) => {
     const updatedPurchases = purchases.map((purchase) =>
@@ -48,9 +48,9 @@ export default function Admin() {
   }));
 
   return (
-    <div className="max-w-5xl mx-auto p-6 text-right font-sans" dir="rtl">
+    <div className="w-5xl mx-auto p-6 text-right font-sans" dir="rtl">
       <AdminSidebar />
-      <div className="flex justify-between items-center mb-8 ml-8">
+      <div className="flex justify-between items-center w- mb-8 ml-8">
         <AdminHeader />
       </div>
 

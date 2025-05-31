@@ -1,23 +1,25 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContext";
+import { StorageContext } from "../../contexts/StorageContext";
 
 export default function UserLogin() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { login } = useContext(AuthContext);
+  const { users } = useContext(StorageContext);
 
   const handleLogin = (e) => {
     e.preventDefault();
 
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
     const isValid = users.some(
       (user) => user.username === username && user.password === password
     );
 
     if (isValid) {
-      sessionStorage.setItem("userLoggedIn", "true");
-      sessionStorage.setItem("currentUser", username);
+      login(username);
       navigate("/");
     } else {
       setError("نام کاربری یا رمز ورود اشتباه است");

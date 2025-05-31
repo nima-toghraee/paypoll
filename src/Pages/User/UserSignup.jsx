@@ -1,24 +1,23 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { StorageContext } from "../../contexts/StorageContext";
 
 export default function UserSignup() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { users, addUser } = useContext(StorageContext);
 
   const handleSignup = (e) => {
     e.preventDefault();
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
 
     if (users.some((user) => user.username === username)) {
       setError("این نام کاربری قبلا ثبت نام شده است");
       return;
     }
 
-    users.push({ username, password });
-    localStorage.setItem("users", JSON.stringify(users));
-    console.log(JSON.parse(localStorage.getItem("users")));
+    addUser({ username, password });
     alert("ثبت نام با موفقیت انجام شد");
     navigate("/user-login");
   };

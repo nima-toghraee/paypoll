@@ -1,11 +1,19 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Chat from "./Chat";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../../contexts/AuthContext";
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const navigate = useNavigate();
+  const { logout } = useContext(AuthContext);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
+  const handleLogout = () => {
+    logout();
+    navigate("/user-login");
+  };
 
   return (
     <>
@@ -35,6 +43,14 @@ export default function Sidebar() {
               className="block text-gray-600 hover:text-blue-600 w-full text-right"
             >
               چت با ادمین
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={handleLogout}
+              className=" bg-red-600 text-white  px-4 py-2 rounded-lg hover:bg-red-700"
+            >
+              خروج
             </button>
           </li>
         </ul>

@@ -1,25 +1,39 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContext";
+import { StorageContext } from "../../contexts/StorageContext";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { login } = useContext(AuthContext);
+
+  const ADMIN_CREDENTIALS = {
+    username: "admin",
+    password: "password",
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
+    console.log("Username:", username, "Password:", password); // دیباگ
 
-    const admins = JSON.parse(localStorage.getItem("admins") || "[]");
-    const isValid = admins.some(
-      (admin) => admin.username === username && admin.password === password
-    );
-
-    if (isValid) {
-      localStorage.setItem("adminLoggedIn", "true");
-      navigate("/admin");
+    if (
+      username.trim() === ADMIN_CREDENTIALS.username &&
+      password.trim() === ADMIN_CREDENTIALS.password
+    ) {
+      console.log("Credentials valid, calling login"); // دیباگ
+      try {
+        login(username.trim());
+        console.log("Navigating to /admin"); // دیباگ
+        navigate("/admin", { replace: true });
+      } catch (err) {
+        console.error("Navigation error:", err); // دیباگ
+        setError("خطایی در ورود رخ داد");
+      }
     } else {
-      setError("نام کاربری یا رمز ورود اشتباه است");
+      setError("نام کاربری یا رمز عبور ادمین اشتباه است");
     }
   };
 
@@ -57,12 +71,6 @@ export default function AdminLogin() {
           </button>
         </div>
       </form>
-      <p className="text-gray-600 text-sm mt-4">
-        حساب ندارید؟{" "}
-        <a href="/admin-signup" className="text-blue-600 hover:underline">
-          ثبت‌نام کنید
-        </a>
-      </p>
     </div>
   );
 }
