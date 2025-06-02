@@ -7,19 +7,23 @@ export default function UserSignup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { users, addUser } = useContext(StorageContext);
+  const [loading, setLoading] = useState(false);
+  const { addUser } = useContext(StorageContext);
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    if (users.some((user) => user.username === username)) {
-      setError("این نام کاربری قبلا ثبت نام شده است");
-      return;
+    try {
+      await addUser({ username, password });
+      alert("ثبت‌نام با موفقیت انجام شد");
+      navigate("/user-login");
+    } catch (err) {
+      setError(err.message || "خطایی در ثبت‌نام رخ داد");
+    } finally {
+      setLoading(false);
     }
-
-    addUser({ username, password });
-    alert("ثبت نام با موفقیت انجام شد");
-    navigate("/user-login");
   };
 
   const handleBack = () => navigate("/user-login");
@@ -62,11 +66,12 @@ export default function UserSignup() {
             type="submit"
             className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
           >
-            ثبت‌نام
+            {loading ? "در حال ثبت..." : "ثبت‌نام"}
           </button>
           <button
             type="button"
             onClick={handleBack}
+            disabled={loading}
             className="w-full bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors duration-200"
           >
             ورود

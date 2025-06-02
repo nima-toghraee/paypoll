@@ -17,19 +17,15 @@ export default function AdminLogin() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log("Username:", username, "Password:", password); // دیباگ
 
     if (
       username.trim() === ADMIN_CREDENTIALS.username &&
       password.trim() === ADMIN_CREDENTIALS.password
     ) {
-      console.log("Credentials valid, calling login"); // دیباگ
       try {
         login(username.trim());
-        console.log("Navigating to /admin"); // دیباگ
         navigate("/admin", { replace: true });
       } catch (err) {
-        console.error("Navigation error:", err); // دیباگ
         setError("خطایی در ورود رخ داد");
       }
     } else {

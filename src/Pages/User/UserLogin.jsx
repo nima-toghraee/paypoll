@@ -8,21 +8,23 @@ export default function UserLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { login } = useContext(AuthContext);
-  const { users } = useContext(StorageContext);
+  const { checkUser } = useContext(StorageContext);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    const isValid = users.some(
-      (user) => user.username === username && user.password === password
-    );
-
-    if (isValid) {
+    try {
+      await checkUser(username, password);
       login(username);
       navigate("/");
-    } else {
-      setError("نام کاربری یا رمز ورود اشتباه است");
+    } catch (err) {
+      setError(err.message || "خطایی رخ داده است");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -40,6 +42,8 @@ export default function UserLogin() {
             placeholder="نام کاربری خود را وارد کنید"
             onChange={(e) => setUsername(e.target.value)}
             className="border border-gray-300 p-2 w-full rounded text-right"
+            required
+            disabled={loading}
           />
         </div>
         <div>
@@ -50,19 +54,24 @@ export default function UserLogin() {
             placeholder="رمز ورود خود را وارد کنید"
             onChange={(e) => setPassword(e.target.value)}
             className="border border-gray-300 p-2 w-full rounded text-right"
+            required
+            disabled={loading}
           />
         </div>
         {error && <p className="text-red-500">{error}</p>}
-        <div>
+        <div className="flex gap-4">
+          {" "}
           <button
             type="submit"
+            disabled={loading}
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
-            ورود
+            {loading ? "در حال ورود ..." : "ورود"}{" "}
           </button>
           <button
             type="button"
             onClick={handleBack}
+            disabled={loading}
             className="w-full bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors duration-200"
           >
             ثبت‌ نام
