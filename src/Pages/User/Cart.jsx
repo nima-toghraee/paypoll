@@ -5,35 +5,45 @@ import { StorageContext } from "../../contexts/StorageContext";
 
 export default function Cart() {
   const navigate = useNavigate();
-  const { isLoggedIn, currentUser, isAuthLoaded } = useContext(AuthContext); // username → currentUser
-  const { purchases, updateCartQuantity, removeFromCart } =
+  const { isLoggedIn, currentUser, isAuthLoaded } = useContext(AuthContext);
+  const { purchases, isStorageLoaded, updateCartQuantity, removeFromCart } =
     useContext(StorageContext);
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!isAuthLoaded) {
-      // console.log("AuthContext هنوز لود نشده");
+    if (!isAuthLoaded || !isStorageLoaded) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("Auth یا Storage هنوز لود نشده");
+      }
       return;
     }
 
     if (!isLoggedIn || !currentUser) {
-      console.log("کاربر لاگین نکرده یا currentUser خالیه:", {
-        isLoggedIn,
-        currentUser,
-      });
+      if (process.env.NODE_ENV === "development") {
+        console.log("کاربر لاگین نکرده یا currentUser خالیه:", {
+          isLoggedIn,
+          currentUser,
+        });
+      }
       setCart([]);
       setLoading(false);
       return;
     }
 
-    // console.log("purchases:", purchases);
     const userCart = purchases.find((p) => p.userId === currentUser);
-    // console.log("userCart برای", currentUser, ":", userCart);
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        "سبد خرید برای",
+        currentUser,
+        ":",
+        userCart?.items?.length || 0
+      );
+    }
     setCart(userCart?.items || []);
     setLoading(false);
-  }, [purchases, isLoggedIn, currentUser]);
+  }, [purchases, isLoggedIn, currentUser, isAuthLoaded, isStorageLoaded]);
 
   const handleUpdateQuantity = async (code, delta) => {
     if (!isLoggedIn || !currentUser) return;
@@ -63,7 +73,6 @@ export default function Cart() {
     }
   };
 
-  // console.log("cart:", cart);
   const totalPrice = Array.isArray(cart)
     ? cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
     : 0;
@@ -76,7 +85,7 @@ export default function Cart() {
     navigate("/payment", { state: { cart } });
   };
 
-  if (loading) {
+  if (!isAuthLoaded || !isStorageLoaded || loading) {
     return <p className="text-center">در حال بارگذاری...</p>;
   }
 

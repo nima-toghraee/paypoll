@@ -47,9 +47,16 @@
           "id": 2,
           "price": 30000,
           "quantity": 3
+        },
+        {
+          "code": "p1",
+          "name": "کلاه",
+          "id": 1,
+          "price": 20000,
+          "quantity": 1
         }
       ],
-      "totalPrice": 90000,
+      "totalPrice": 110000,
       "date": "2025-06-04"
     }
   ]
