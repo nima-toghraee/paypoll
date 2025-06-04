@@ -14,8 +14,6 @@ export default function UserLogin() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
 
     try {
       await checkUser(username, password);

@@ -9,6 +9,48 @@
       "id": "53c2",
       "username": "reza",
       "password": "123"
+    },
+    {
+      "id": "ac60",
+      "username": "navid",
+      "password": "123"
+    }
+  ],
+  "admin": [
+    {
+      "username": "admin",
+      "password": "password"
+    }
+  ],
+  "purchases": [
+    {
+      "id": "cb16",
+      "items": [
+        {
+          "code": "p1",
+          "name": "کلاه",
+          "id": 1,
+          "price": 20000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 60000,
+      "date": "2025-06-04",
+      "userId": "ali"
+    },
+    {
+      "id": "05db",
+      "userId": "navid",
+      "items": [
+        {
+          "code": "p2",
+          "id": 2,
+          "price": 30000,
+          "quantity": 3
+        }
+      ],
+      "totalPrice": 90000,
+      "date": "2025-06-04"
     }
   ]
 }

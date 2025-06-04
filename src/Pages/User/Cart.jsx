@@ -1,37 +1,72 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContext";
+import { StorageContext } from "../../contexts/StorageContext";
 
 export default function Cart() {
   const navigate = useNavigate();
-  const [cart, setCart] = useState(
-    JSON.parse(localStorage.getItem("cart") || "[]")
-  );
-  const isLoggedIn = sessionStorage.getItem("userLoggedIn") === "true";
+  const { isLoggedIn, currentUser, isAuthLoaded } = useContext(AuthContext); // username → currentUser
+  const { purchases, updateCartQuantity, removeFromCart } =
+    useContext(StorageContext);
+  const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+    if (!isAuthLoaded) {
+      // console.log("AuthContext هنوز لود نشده");
+      return;
+    }
 
-  const updateQuantity = (code, delta) => {
-    setCart((prev) =>
-      prev
-        .map((item) =>
-          item.code === code
-            ? { ...item, quantity: item.quantity + delta }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
+    if (!isLoggedIn || !currentUser) {
+      console.log("کاربر لاگین نکرده یا currentUser خالیه:", {
+        isLoggedIn,
+        currentUser,
+      });
+      setCart([]);
+      setLoading(false);
+      return;
+    }
+
+    // console.log("purchases:", purchases);
+    const userCart = purchases.find((p) => p.userId === currentUser);
+    // console.log("userCart برای", currentUser, ":", userCart);
+    setCart(userCart?.items || []);
+    setLoading(false);
+  }, [purchases, isLoggedIn, currentUser]);
+
+  const handleUpdateQuantity = async (code, delta) => {
+    if (!isLoggedIn || !currentUser) return;
+    setLoading(true);
+    setError("");
+    try {
+      await updateCartQuantity(currentUser, code, delta);
+    } catch (err) {
+      setError("خطا در به‌روزرسانی تعداد کالا");
+      console.error("خطا در به‌روزرسانی تعداد:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const removeItem = (code) => {
-    setCart((prev) => prev.filter((item) => item.code !== code));
+  const handleRemoveItem = async (code) => {
+    if (!isLoggedIn || !currentUser) return;
+    setLoading(true);
+    setError("");
+    try {
+      await removeFromCart(currentUser, code);
+    } catch (err) {
+      setError("خطا در حذف کالا");
+      console.error("خطا در حذف کالا:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const totalPrice = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  // console.log("cart:", cart);
+  const totalPrice = Array.isArray(cart)
+    ? cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    : 0;
 
   const handleCheckout = () => {
     if (!isLoggedIn) {
@@ -41,9 +76,14 @@ export default function Cart() {
     navigate("/payment", { state: { cart } });
   };
 
+  if (loading) {
+    return <p className="text-center">در حال بارگذاری...</p>;
+  }
+
   return (
     <div className="max-w-5xl mx-auto p-6 text-right font-sans" dir="rtl">
       <h1 className="text-2xl font-bold text-gray-800 mb-8">سبد خرید</h1>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
       {cart.length > 0 ? (
         <div className="space-y-4">
           {cart.map((item) => (
@@ -59,21 +99,24 @@ export default function Cart() {
               </div>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => updateQuantity(item.code, -1)}
+                  onClick={() => handleUpdateQuantity(item.code, -1)}
                   className="bg-gray-200 px-2 py-1 rounded"
+                  disabled={loading}
                 >
                   -
                 </button>
                 <span>{item.quantity}</span>
                 <button
-                  onClick={() => updateQuantity(item.code, 1)}
+                  onClick={() => handleUpdateQuantity(item.code, 1)}
                   className="bg-gray-200 px-2 py-1 rounded"
+                  disabled={loading}
                 >
                   +
                 </button>
                 <button
-                  onClick={() => removeItem(item.code)}
+                  onClick={() => handleRemoveItem(item.code)}
                   className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
+                  disabled={loading}
                 >
                   حذف
                 </button>
@@ -87,6 +130,7 @@ export default function Cart() {
             <button
               onClick={handleCheckout}
               className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+              disabled={loading}
             >
               پرداخت
             </button>

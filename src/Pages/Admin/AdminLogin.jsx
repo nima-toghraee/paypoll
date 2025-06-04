@@ -8,30 +8,27 @@ export default function AdminLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { login } = useContext(AuthContext);
+  const { checkAdmin } = useContext(StorageContext);
 
-  const ADMIN_CREDENTIALS = {
-    username: "admin",
-    password: "password",
-  };
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
-    if (
-      username.trim() === ADMIN_CREDENTIALS.username &&
-      password.trim() === ADMIN_CREDENTIALS.password
-    ) {
-      try {
-        login(username.trim());
-        navigate("/admin", { replace: true });
-      } catch (err) {
-        setError("خطایی در ورود رخ داد");
-      }
-    } else {
-      setError("نام کاربری یا رمز عبور ادمین اشتباه است");
+    try {
+      await checkAdmin(username.trim(), password.trim());
+      login(username.trim());
+      navigate("/admin");
+    } catch (err) {
+      setError(err.message || "خطایی رخ داده است");
+    } finally {
+      setLoading(false);
     }
   };
+
+  const handleBack = () => navigate("/");
 
   return (
     <div className="max-w-md mx-auto p-4 text-right" dir="rtl">
@@ -45,8 +42,11 @@ export default function AdminLogin() {
             placeholder="نام کاربری خود را وارد کنید"
             onChange={(e) => setUsername(e.target.value)}
             className="border border-gray-300 p-2 w-full rounded text-right"
+            required
+            disabled={loading}
           />
         </div>
+
         <div>
           <label className="block mb-2">رمز کاربری</label>
           <input
@@ -55,15 +55,31 @@ export default function AdminLogin() {
             placeholder="رمز ورود خود را وارد کنید"
             onChange={(e) => setPassword(e.target.value)}
             className="border border-gray-300 p-2 w-full rounded text-right"
+            required
+            disabled={loading}
           />
         </div>
         {error && <p className="text-red-500">{error}</p>}
+
         <div>
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            disabled={loading}
+            className={`bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
-            ورود
+            {loading ? "در حال ورود ..." : "ورود"}
+          </button>
+          <button
+            type="button"
+            onClick={handleBack}
+            disabled={loading}
+            className={`bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+          >
+            بازگشت
           </button>
         </div>
       </form>
