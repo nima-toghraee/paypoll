@@ -15,6 +15,11 @@ export default function Sidebar() {
     navigate("/user-login");
   };
 
+  const handleProfile = () => {
+    navigate("/profile");
+    setIsOpen(false);
+  };
+
   return (
     <>
       <button
@@ -45,10 +50,20 @@ export default function Sidebar() {
               چت با ادمین
             </button>
           </li>
+
+          <li>
+            <button
+              onClick={handleProfile}
+              className="block text-gray-600 hover:text-blue-600 w-full text-right"
+            >
+              پروفایل
+            </button>
+          </li>
+
           <li>
             <button
               onClick={handleLogout}
-              className=" bg-red-600 text-white  px-4 py-2 rounded-lg hover:bg-red-700"
+              className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 w-full"
             >
               خروج
             </button>

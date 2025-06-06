@@ -12,6 +12,7 @@ export default function Admin() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const { isLoggedIn, currentUser } = useContext(AuthContext);
+
   useEffect(() => {
     if (!isLoggedIn || currentUser !== "admin") {
       navigate("/admin-login");

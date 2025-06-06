@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContext";
+import { StorageContext } from "../../contexts/StorageContext";
 
 const generateTrackingCode = () => {
   const timestamp = Date.now().toString(36);
@@ -8,50 +10,92 @@ const generateTrackingCode = () => {
 };
 
 export default function Payment() {
-  const { state } = useLocation();
-  const { cart } = state || {};
   const navigate = useNavigate();
+  const { isLoggedIn, currentUser } = useContext(AuthContext); // از AuthContext
+  const { purchases, complatePurchase, isStorageLoaded } =
+    useContext(StorageContext);
   const [paymentStatus, setPaymentStatus] = useState(null);
-  const [purchase, setPurchase] = useState(null);
-  const username = sessionStorage.getItem("currentUser") || "کاربر ناشناس";
-  const isLoggedIn = sessionStorage.getItem("userLoggedIn") === "true";
+  const [error, setError] = useState("");
+  const [order, setOrder] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
 
-  const totalPrice =
-    cart?.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0;
+  // پیدا کردن سبد خرید کاربر
+  const userCart = purchases.find((p) => p.userId === currentUser) || {};
+  const cart = userCart.items || [];
+  const totalPrice = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
-  const handlePayment = () => {
-    if (!isLoggedIn) {
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:3002/users?username=${currentUser}`
+        );
+        const data = await res.json();
+        if (data.length > 0) {
+          setUserInfo(data[0]);
+        } else {
+          setError("کاربر یافت نشد");
+        }
+      } catch (err) {
+        setError("خطا در بارگذاری اطلاعات کاربر");
+        console.error("خطا:", err);
+      }
+    };
+    if (currentUser) {
+      fetchUserInfo();
+    }
+  }, [currentUser]);
+
+  const handlePayment = async () => {
+    if (!isLoggedIn || !currentUser) {
       navigate("/user-login");
+      return;
+    }
+    if (!isStorageLoaded) {
+      setError("لطفاً صبر کنید، سیستم در حال بارگذاری است...");
       return;
     }
     if (!cart || cart.length === 0) {
       setPaymentStatus("failed");
+      setError("سبد خرید خالی است");
       return;
     }
 
-    const isSuccess = Math.random() < 0.8;
+    if (!userInfo) {
+      setError("لطفاً صبر کنید، اطلاعات کاربر در حال بارگذاری است...");
+      return;
+    }
+
+    if (
+      !userInfo.name ||
+      !userInfo.phone ||
+      !userInfo.address ||
+      !userInfo.postalCode
+    ) {
+      setError("لطفاً اطلاعات پروفایل خود را تکمیل کنید");
+      navigate("/profile", { state: { fromPayment: true } });
+      return;
+    }
+
+    const isSuccess = Math.random() < 0.8; // شبیه‌سازی پرداخت
 
     if (isSuccess) {
-      const newPurchases = cart.map((item) => ({
-        id: Date.now() + Math.random(),
-        trackingCode: generateTrackingCode(),
-        product: { name: item.name, price: item.price, code: item.code },
-        user: { name: username },
-        date: new Date().toLocaleString("fa-IR"),
-      }));
-
-      const existingPurchases = JSON.parse(
-        localStorage.getItem("purchases") || "[]"
-      );
-      localStorage.setItem(
-        "purchases",
-        JSON.stringify([...existingPurchases, ...newPurchases])
-      );
-      localStorage.setItem("cart", "[]"); // خالی کردن سبد
-      setPurchase(newPurchases);
-      setPaymentStatus("success");
+      try {
+        const trackingCode = generateTrackingCode();
+        const newOrder = await complatePurchase(currentUser, trackingCode);
+        setOrder(newOrder);
+        setPaymentStatus("success");
+      } catch (err) {
+        setPaymentStatus("failed");
+        setError("خطا در پردازش پرداخت");
+        console.error("خطا در پرداخت:", err);
+      }
     } else {
       setPaymentStatus("failed");
+      setError("پرداخت ناموفق بود");
     }
   };
 
@@ -60,13 +104,20 @@ export default function Payment() {
   };
 
   const handleRetry = () => {
-    setPaymentStatus(null); // ریست وضعیت برای امتحان دوباره
+    setPaymentStatus(null);
+    setError("");
+    setOrder(null);
   };
+
+  if (!isStorageLoaded) {
+    return <p className="text-center">در حال بارگذاری...</p>;
+  }
 
   return (
     <div className="max-w-md mx-auto p-4 text-right" dir="rtl">
       <h1 className="text-xl font-bold mb-4">پردازش پرداخت</h1>
-      {cart && cart.length > 0 && !paymentStatus ? (
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {cart.length > 0 && !paymentStatus ? (
         <div className="space-y-2 border border-gray-200 p-4 rounded">
           {cart.map((item) => (
             <div key={item.code} className="space-y-1">
@@ -80,7 +131,7 @@ export default function Payment() {
           <p className="text-gray-700 font-bold">
             جمع کل: {totalPrice.toLocaleString("fa-IR")} تومان
           </p>
-          <p className="text-gray-700">نام خریدار: {username}</p>
+          <p className="text-gray-700">نام خریدار: {currentUser}</p>
           <button
             onClick={handlePayment}
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4"
@@ -88,24 +139,25 @@ export default function Payment() {
             تأیید پرداخت
           </button>
         </div>
-      ) : paymentStatus === "success" && purchase.length > 0 ? (
+      ) : paymentStatus === "success" ? (
         <div className="space-y-2 border border-gray-200 p-4 rounded">
           <p className="text-green-600 font-bold">پرداخت موفق!</p>
-          {purchase.map((purchase) => (
-            <div key={purchase.id} className="space-y-1">
-              <p className="text-green-600 font-bold">
-                کد پیگیری: {purchase.trackingCode}
-              </p>
+          <p className="text-green-600 font-bold">
+            کد پیگیری: {order.trackingCode}
+          </p>
+          {order.items.map((item) => (
+            <div key={item.code} className="space-y-1">
+              <p className="text-gray-700">نام محصول: {item.name}</p>
               <p className="text-gray-700">
-                نام محصول: {purchase.product.name}
-              </p>
-              <p className="text-gray-700">
-                قیمت: {purchase.product.price.toLocaleString("fa-IR")} تومان
+                قیمت: {(item.price * item.quantity).toLocaleString("fa-IR")}{" "}
+                تومان
               </p>
             </div>
           ))}
-          <p className="text-gray-700">نام خریدار: {username}</p>
-          <p className="text-gray-700">تاریخ خرید: {purchase[0].date}</p>
+          <p className="text-gray-700">نام خریدار: {currentUser}</p>
+          <p className="text-gray-700">
+            تاریخ خرید: {new Date(order.Date).toLocaleString("fa-IR")}
+          </p>
           <div className="flex justify-end mt-4">
             <button
               onClick={handleBackToHome}
@@ -118,7 +170,7 @@ export default function Payment() {
       ) : paymentStatus === "failed" ? (
         <div className="space-y-2 border border-gray-200 p-4 rounded">
           <p className="text-red-500 font-bold">پرداخت ناموفق بود!</p>
-          <p className="text-gray-700">لطفاً دوباره تلاش کنید.</p>
+          <p className="text-gray-700">{error}</p>
           <div className="flex justify-end gap-2 mt-4">
             <button
               onClick={handleRetry}

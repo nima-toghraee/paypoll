@@ -168,11 +168,76 @@ export const usePurchases = () => {
     }
   };
 
+  const complatePurchase = async (userId, trackingCode) => {
+    try {
+      const res = await fetch(
+        `http://localhost:3002/purchases?userId=${userId}`
+      );
+      const existingCart = await res.json();
+
+      if (existingCart.length === 0) {
+        throw new Error("سبد خرید یافت نشد");
+      }
+      const cart = existingCart[0];
+
+      const newOrder = {
+        userId,
+        items: cart.items,
+        totalPrice: cart.totalPrice,
+        status: "complated",
+        trackingCode,
+        date: new Date().toISOString().split("T")[0], // آپدیت تاریخ
+      };
+
+      const orderResponse = await fetch("http://localhost:3002/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newOrder),
+      });
+
+      const addedOrder = await orderResponse.json();
+      if (process.env.NODE_ENV === "development") {
+        console.log("سفارش جدید اضافه شد:", addedOrder);
+      }
+
+      const updatedCart = {
+        ...cart,
+        items: [],
+        totalPrice: 0,
+        trackingCode: null,
+        status: " pending",
+      };
+
+      const cartResponse = await fetch(
+        `http://localhost:3002/purchases/${cart.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedCart),
+        }
+      );
+      const updatedPurchase = await cartResponse.json();
+      setPurchases(
+        purchases.map((p) => (p.id === cart.id ? updatedPurchase : p))
+      );
+
+      if (process.env.NODE_ENV === "development") {
+        console.log("سبد خرید خالی شد:", updatedPurchase);
+      }
+
+      return addedOrder; // برای استفاده در Payment.jsx
+    } catch (err) {
+      console.error("خطا در تکمیل خرید:", err);
+      throw err;
+    }
+  };
+
   return {
     purchases,
     isPurchasesLoaded,
     addToCart,
     updateCartQuantity,
     removeFromCart,
+    complatePurchase,
   };
 };

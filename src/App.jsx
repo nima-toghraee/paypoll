@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProductCode from "./Pages/User/ProductCode";
 import User from "./Pages/User/User";
-import UserInfo from "./Pages/User/UserInfo";
+import UserInfo from "./Pages/User/UserProfile";
 import Payment from "./Pages/User/Payment";
 import Admin from "./Pages/Admin/Admin";
 import AdminLogin from "./Pages/Admin/AdminLogin";
@@ -13,6 +13,7 @@ import ListUsers from "./Pages/Admin/AdminSidebar/ListUsers";
 import AdminChat from "./Pages/Admin/AdminHeader/AdminChat";
 import { AuthProvider } from "./contexts/AuthContext";
 import { StorageProvider } from "./contexts/StorageContext";
+import UserProfile from "./Pages/User/UserProfile";
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="/admin/users" element={<ListUsers />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/admin/chat/:username" element={<AdminChat />} />
+            <Route path="/profile" element={<UserProfile />} />
           </Routes>
         </BrowserRouter>
       </StorageProvider>

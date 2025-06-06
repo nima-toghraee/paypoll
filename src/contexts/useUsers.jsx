@@ -38,6 +38,7 @@ export const useUsers = () => {
       const res = await fetch(
         `http://localhost:3002/admin?username=${username}&password=${password}`
       );
+
       const matchedAdmin = await res.json();
       if (matchedAdmin.length === 0) {
         throw new Error("نام کاربری یا رمز عبور اشتباه است");
