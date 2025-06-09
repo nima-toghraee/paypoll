@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import UserHeader from "./UserHeader";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
+import Header from "../../../components/Header";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -16,8 +17,8 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div>
-        <UserHeader />
+      <div className="w-[80%]  sm:w-[90%] mx-auto  p-6 text-right max-w-7xl sm:p-4 font-sans">
+        <Header />
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import { useState } from "react";
 import products from "../../Products/Products";
 import { useNavigate, Link } from "react-router-dom";
 import Header from "../../components/Header";
+import { FaSearch } from "react-icons/fa";
 
 export default function ProductCode() {
   const [code, setCode] = useState("");
@@ -19,27 +20,28 @@ export default function ProductCode() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6 text-right font-sans" dir="rtl">
+    <div
+      className="w-[80%]  sm:w-[90%] mx-auto  p-6 text-right max-w-7xl sm:p-4 font-sans"
+      dir="rtl"
+    >
       <Header />
 
-      <h1 className="text-xl font-bold mb-4 text-right">
-        کد محصول را وارد نمایید
-      </h1>
-      <input
-        type="text"
-        value={code}
-        onChange={(e) => setCode(e.target.value)}
-        className="border border-gray-300 p-3 w-full mb-2 rounded"
-        placeholder="کد محصول را وارد کنید"
-      />
-      {error && <p className="text-red-500 mb-2 text-right">{error}</p>}
-
-      <button
-        onClick={handleSubmit}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 ml-auto"
-      >
-        ادامه
-      </button>
+      <div className="relative mb-2 flex m-auto w-2/4 mt-3">
+        <input
+          type="text"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          className="border border-gray-300 p-3 pr-10 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="کد محصول را وارد کنید"
+        />
+        <button
+          onClick={handleSubmit}
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-600"
+          title="جستجو"
+        >
+          <FaSearch className="w-5 h-5" />
+        </button>
+      </div>
     </div>
   );
 }

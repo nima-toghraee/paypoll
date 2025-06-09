@@ -3,13 +3,11 @@ import Chat from "./Chat";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../../contexts/AuthContext";
 
-export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function Sidebar({ isOpen, toggleSidebar }) {
   const [chatOpen, setChatOpen] = useState(false);
   const navigate = useNavigate();
   const { logout } = useContext(AuthContext);
 
-  const toggleSidebar = () => setIsOpen(!isOpen);
   const handleLogout = () => {
     logout();
     navigate("/user-login");
@@ -17,17 +15,11 @@ export default function Sidebar() {
 
   const handleProfile = () => {
     navigate("/profile");
-    setIsOpen(false);
+    toggleSidebar();
   };
 
   return (
     <>
-      <button
-        onClick={toggleSidebar}
-        className="fixed top-4 left-4 z-50 bg-blue-600 text-white p-2 rounded-lg md:block"
-      >
-        ☰
-      </button>
       <nav
         className={`fixed top-0 left-0 h-full bg-white shadow-lg p-4 transform transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -36,7 +28,10 @@ export default function Sidebar() {
       >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-gray-800">ناوبری</h2>
-          <button onClick={toggleSidebar} className="md:hidden text-gray-600">
+          <button
+            onClick={toggleSidebar}
+            className="text-gray-600 hover:text-red-600 p-2 rounded bg-gray-100 hover:bg-red-100 transition-colors"
+          >
             ✕
           </button>
         </div>
@@ -70,13 +65,6 @@ export default function Sidebar() {
           </li>
         </ul>
       </nav>
-
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
-          onClick={toggleSidebar}
-        />
-      )}
 
       <Chat isOpen={chatOpen} onClose={() => setChatOpen(false)} />
     </>

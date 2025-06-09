@@ -1,28 +1,52 @@
 import { Link, useNavigate } from "react-router-dom";
 import CartIcon from "../../../components/CartIcon";
 import { Sidebar } from "./Sidebar";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { FaBars } from "react-icons/fa";
 
 export default function UserHeader() {
   const { currentUser } = useContext(AuthContext);
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const toggleSidebar = () => setIsOpen(!isOpen);
+
+  const handleDashboard = () => {
+    navigate("/profile");
+  };
 
   return (
     <header
-      className="bg-white w-max  shadow-md p-4 flex justify-between items-center"
+      className=" flex w-full  justify-between bg-white items-center   h-14"
       dir="rtl"
     >
       {" "}
-      <div className="flex w-max items-center gap-4">
-        <Link to="/" className="text-xl font-bold text-blue-600">
+      <div className="flex w-full mx-2 justify-between  ">
+        <Link to="/" className="text-xl text-blue-600 ">
           فروشگاه
         </Link>
-        <span className="text-gray-600">
-          خوش آمدید، {currentUser || "کاربر ناشناس"}
-        </span>
+        <CartIcon className="m-auto " />
       </div>
-      <div className="flex w-max items-center gap-4">
-        <Sidebar />
+      <div className="flex w-max items-center gap-4 ">
+        <div className="flex w-max  gap-2">
+          <Link
+            to="/dashboard"
+            className="text-gray-600 hover:text-blue-600 cursor-pointer"
+            onClick={handleDashboard}
+          >
+            {currentUser || "کاربر ناشناس"}
+          </Link>
+          <button
+            onClick={toggleSidebar}
+            className="text-gray-600 hover:text-blue-600 p-1 rounded"
+            title="باز کردن منو"
+          >
+            <FaBars className="w-5 h-5" />
+          </button>
+        </div>
+
+        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
       </div>
     </header>
   );
