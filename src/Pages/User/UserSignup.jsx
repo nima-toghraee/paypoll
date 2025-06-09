@@ -20,7 +20,7 @@ export default function UserSignup() {
       alert("ثبت‌نام با موفقیت انجام شد");
       navigate("/user-login");
     } catch (err) {
-      setError(err.message || "خطایی در ثبت‌نام رخ داد");
+      setError(err.message || "خطایی در ثبت‌ نام رخ داد");
     } finally {
       setLoading(false);
     }
