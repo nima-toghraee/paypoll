@@ -1,0 +1,15 @@
+[33m6763480[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m refactor: Split UserProfile into modular components and hook
+[33m3f4d3be[m[33m ([m[1;31morigin/main[m[33m)[m fix: Display users with orders in admin panel
+[33mf51429d[m feat: Require complete user profile before payment
+[33me1c3286[m refactor: Split StorageContext into useUsers and usePurchases hooks
+[33mea02700[m feat: Connect cart and purchase functionality to JSON Server Integrated cart and purchase management with JSON Server for persistent storage in db.json. Implemented addToCart, updateCartQuantity, and removeFromCart in StorageContext to handle CRUD operations via fetch API. Fixed AuthContext to ensure currentUser syncs correctly with sessionStorage for accurate userId mapping. Resolved empty cart issue by correcting userId mismatches and cleaning invalid purchase entries in db.json. Added isAuthLoaded and isStorageLoaded to handle async loading states.
+[33mb49b07a[m Migrated user signup and login from localStorage to JSON Server with db.json
+[33mf1b65fd[m Implement admin login with AuthContext and StorageContext for session and data management
+[33me6dfeea[m Add admin and user chat functionality with email icon modal
+[33me99ea3a[m Add user registration, login, dashboard, sidebar, and cart features with modular structure
+[33m0da463a[m add component admin and adminLogin
+[33m39e93bc[m update payment component with localsorge
+[33m3d32222[m update userinfo component
+[33m0ee86c4[m Add User component with purchase/back buttons and UserInfo form
+[33ma606b83[m Add project configuration files and initial setup
+[33m66b8c2c[m Add ProductCode component with Tailwind styling and navigation

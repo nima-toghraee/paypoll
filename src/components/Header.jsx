@@ -3,33 +3,30 @@ import CartIcon from "./CartIcon";
 import UserHeader from "../Pages/User/Dashboard/UserHeader";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 export default function Header() {
   const { isLoggedIn } = useContext(AuthContext);
 
   return (
-    <header
-      className="flex gap-4 min-w-full justify-between border-b-2    mb-8        items-center"
-      dir="rtl"
-    >
+    <header className=" w-[100%] h-10 border-b-2 " dir="rtl">
       {!isLoggedIn ? (
-        <div className="flex gap-4 ">
-          <div>
+        <div className="flex w-[100%]  justify-between ">
+          <div className=" flex gap-4">
             <Link
               to="/user-login"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+              className="  px-5 py-1 flex gap-2 hover:scale-110 transition-transform duration-200"
             >
-              ورود
-            </Link>
-            <Link
-              to="/user-signup"
-              className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700"
-            >
-              ثبت‌نام
+              <FontAwesomeIcon
+                icon={faUser}
+                className="text-lg m-auto hover:scale-110 transition-transform duration-200"
+              />
+              <span>ورود/ثبت‌نام</span>
             </Link>
           </div>
-          <div>
-            <CartIcon className="m-auto " />
+          <div className="my-auto ">
+            <CartIcon className=" " />
           </div>
         </div>
       ) : (

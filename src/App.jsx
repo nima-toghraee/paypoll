@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ProductCode from "./Pages/User/ProductCode";
 import User from "./Pages/User/User";
-import UserInfo from "./Pages/User/userProfile/UserProfile";
+import UserInfo from "./Pages/User/UserProfile/UserProfile";
 import Payment from "./Pages/User/Payment";
 import Admin from "./Pages/Admin/Admin";
 import AdminLogin from "./Pages/Admin/AdminLogin";
@@ -13,7 +12,9 @@ import ListUsers from "./Pages/Admin/AdminSidebar/ListUsers";
 import AdminChat from "./Pages/Admin/AdminHeader/AdminChat";
 import { AuthProvider } from "./contexts/AuthContext";
 import { StorageProvider } from "./contexts/StorageContext";
-import UserProfile from "./Pages/User/userProfile/UserProfile";
+import UserProfile from "./Pages/User/UserProfile/UserProfile";
+import Home from "./Pages/Home/Home";
+import { ProductsProvider } from "./contexts/UseProducts";
 
 export default function App() {
   return (
@@ -21,7 +22,7 @@ export default function App() {
       <StorageProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<ProductCode />} />
+            <Route path="/" element={<Home />} />
             <Route path="/user" element={<User />} />
             <Route path="/userForm" element={<UserInfo />} />
             <Route path="/payment" element={<Payment />} />

@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { StorageContext } from "../../contexts/StorageContext";
 
 export default function UserSignup() {
@@ -26,58 +26,58 @@ export default function UserSignup() {
     }
   };
 
-  const handleBack = () => navigate("/user-login");
-
   return (
-    <div className="max-w-md mx-auto p-6 text-right font-sans" dir="rtl">
-      <h1 className="text-2xl font-bold text-gray-800 mb-8">ثبت نام کاربر</h1>
-      <form onSubmit={handleSignup} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            نام کاربری
-          </label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="نام کاربری را وارد کنید"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
-            required
-          />
-        </div>
+    <div className="bg-blue-200 h-screen flex flex-col items-center justify-center gap-4">
+      <div
+        className="bg-white flex flex-col items-center   lg:w-[30%] w-[80%] h-2/5  p-4 text-right"
+        dir="rtl"
+      >
+        {" "}
+        <h1 className="text-xl font-bold ">ثبت نام کاربر</h1>
+        <form onSubmit={handleSignup} className="space-y-4 w-full ">
+          <div>
+            <label className="block mb-2">نام کاربری</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="نام کاربری را وارد کنید"
+              className="border border-gray-300 p-2 w-full rounded text-right hover:border-blue-500 hover:shadow-md hover:bg-blue-50 transition-all duration-200"
+              required
+            />
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            رمز عبور
-          </label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder=" رمز عبور را وارد کنید"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
-            required
-          />
-        </div>
-        {error && <p className="text-red-600 text-sm">{error}</p>}
+          <div>
+            <label className="block mb-2">رمز عبور</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder=" رمز عبور را وارد کنید"
+              className="border border-gray-300 p-2 w-full rounded text-right hover:border-blue-500 hover:shadow-md hover:bg-blue-50 transition-all duration-200"
+              required
+            />
+          </div>
+          {error && <p className="text-red-500">{error}</p>}
 
-        <div className="flex gap-4">
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
-          >
-            {loading ? "در حال ثبت..." : "ثبت‌نام"}
-          </button>
-          <button
-            type="button"
-            onClick={handleBack}
-            disabled={loading}
-            className="w-full bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors duration-200"
-          >
-            ورود
-          </button>
-        </div>
-      </form>
+          <div className="flex gap-4">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white w-full py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200"
+            >
+              {loading ? "در حال ثبت..." : "ثبت‌نام"}
+            </button>
+          </div>
+        </form>
+      </div>
+      <div className=" text-right">
+        <p className=" text-gray-600">
+          حساب کاربری دارید؟{" "}
+          <Link to="/user-login" className="text-blue-600 hover:underline">
+            وارد شوید{" "}
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

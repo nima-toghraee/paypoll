@@ -1,36 +1,9 @@
 {
   "users": [
     {
-      "id": "055f",
-      "username": "ali",
-      "password": "123",
-      "name": "navi toghraee",
-      "phone": "09136281348",
-      "address": "defeeq",
-      "postalCode": "0123456978"
-    },
-    {
-      "id": "53c2",
-      "username": "reza",
-      "password": "123"
-    },
-    {
-      "id": "ac60",
-      "username": "navid",
-      "password": "123",
-      "name": "navi toghraee",
-      "phone": "09136281348",
-      "address": "fwewf",
-      "postalCode": "0123654789"
-    },
-    {
-      "id": "3de2",
+      "id": "1000",
       "username": "nima",
-      "password": "123",
-      "name": "نیما طغرایی",
-      "phone": "09136281348",
-      "address": "fwewf",
-      "postalCode": "0123654789"
+      "password": "123"
     }
   ],
   "admin": [
@@ -42,107 +15,15 @@
   ],
   "purchases": [
     {
-      "id": "d2c7",
-      "userId": "navid",
-      "items": [],
-      "totalPrice": 0,
-      "date": "2025-06-06",
-      "status": " pending",
-      "trackingCode": null
-    },
-    {
-      "id": "abdb",
-      "userId": "ali",
-      "items": [
-        {
-          "code": "p2",
-          "id": 2,
-          "price": 30000,
-          "quantity": 1
-        }
-      ],
-      "totalPrice": 30000,
-      "date": "2025-06-06",
-      "trackingCode": null,
-      "status": " pending"
-    },
-    {
-      "id": "b60e",
-      "userId": "nima",
-      "items": [],
-      "totalPrice": 0,
-      "date": "2025-06-06",
-      "trackingCode": null,
-      "status": " pending"
+      "id": "1d8c",
+      "userId": "1000",
+      "productId": 2,
+      "quantity": 1,
+      "title": "Mens Casual Premium Slim Fit T-Shirts ",
+      "price": 22.3,
+      "image": "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg",
+      "category": "men's clothing"
     }
   ],
-  "orders": [
-    {
-      "id": "9187",
-      "userId": "ali",
-      "items": [
-        {
-          "code": "p1",
-          "name": "کلاه",
-          "id": 1,
-          "price": 20000,
-          "quantity": 1
-        }
-      ],
-      "totalPrice": 20000,
-      "status": "complated",
-      "trackingCode": "TRK-MBKP3XJ1-TI508",
-      "date": "2025-06-06"
-    },
-    {
-      "id": "ea14",
-      "userId": "navid",
-      "items": [
-        {
-          "code": "p2",
-          "id": 2,
-          "price": 30000,
-          "quantity": 2
-        }
-      ],
-      "totalPrice": 60000,
-      "status": "complated",
-      "trackingCode": "TRK-MBKSY0IF-PDXPB",
-      "date": "2025-06-06"
-    },
-    {
-      "id": "af91",
-      "userId": "navid",
-      "items": [
-        {
-          "code": "p1",
-          "name": "کلاه",
-          "id": 1,
-          "price": 20000,
-          "quantity": 1
-        }
-      ],
-      "totalPrice": 20000,
-      "status": "complated",
-      "trackingCode": "TRK-MBKTI29U-PC80D",
-      "date": "2025-06-06"
-    },
-    {
-      "id": "6b73",
-      "userId": "nima",
-      "items": [
-        {
-          "code": "p1",
-          "name": "کلاه",
-          "id": 1,
-          "price": 20000,
-          "quantity": 1
-        }
-      ],
-      "totalPrice": 20000,
-      "status": "complated",
-      "trackingCode": "TRK-MBKTJR4G-EZP7Y",
-      "date": "2025-06-06"
-    }
-  ]
+  "orders": []
 }

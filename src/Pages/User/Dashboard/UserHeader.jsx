@@ -16,14 +16,16 @@ export default function UserHeader() {
     navigate("/profile");
   };
 
+  console.log(" currentUser:", { currentUser });
+
   return (
     <header
-      className=" flex w-full  justify-between bg-white items-center   h-14"
+      className="  border-b-2 flex w-full  justify-between bg-white items-center py-6  h-10"
       dir="rtl"
     >
       {" "}
-      <div className="flex w-full mx-2 justify-between  ">
-        <Link to="/" className="text-xl text-blue-600 ">
+      <div className="flex w-full mx-2 justify-between   ">
+        <Link to="/" className="text-xl text-blue-600  ">
           فروشگاه
         </Link>
         <CartIcon className="m-auto " />
@@ -35,7 +37,7 @@ export default function UserHeader() {
             className="text-gray-600 hover:text-blue-600 cursor-pointer"
             onClick={handleDashboard}
           >
-            {currentUser || "کاربر ناشناس"}
+            {currentUser.username || "کاربر ناشناس"}
           </Link>
           <button
             onClick={toggleSidebar}

@@ -11,18 +11,21 @@ export const AuthProvider = ({ children }) => {
     const loggedIn = sessionStorage.getItem("userLoggedIn") === "true";
     const user = sessionStorage.getItem("currentUser");
     // console.log("AuthContext loaded:", { loggedIn, user });
-    setIsLoggedIn(loggedIn);
-    setCurrentUser(user);
+
+    if (loggedIn && user) {
+      setIsLoggedIn(true);
+      setCurrentUser(JSON.parse(user)); // شیء کاربر
+    }
     setIsAuthLoaded(true); // لود کامل شد
   }, []);
 
-  const login = (username) => {
-    console.log("Login called:", { username });
+  const login = (user) => {
+    console.log("Login called:", { user });
     setIsLoggedIn(true);
-    setCurrentUser(username);
+    setCurrentUser(user);
     sessionStorage.setItem("userLoggedIn", "true");
-    sessionStorage.setItem("currentUser", username);
-    console.log("Login complete:", { isLoggedIn: true, currentUser: username });
+    sessionStorage.setItem("currentUser", JSON.stringify(user));
+    console.log("Login complete:", { isLoggedIn: true, currentUser: user });
   };
 
   const logout = () => {

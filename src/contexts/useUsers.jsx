@@ -52,6 +52,9 @@ export const useUsers = () => {
 
   const addUser = async (newUser) => {
     try {
+      // ..............
+      // check uonic username
+      // ....................
       const res = await fetch(
         `http://localhost:3002/users?username=${newUser.username}`
       );
@@ -59,10 +62,26 @@ export const useUsers = () => {
       if (existingUsers.length > 0) {
         throw new Error("این نام کاربری قبلاً ثبت شده است");
       }
+
+      // ..............
+      // creat id
+      // ....................
+      const resUsers = await fetch("http://localhost:3002/users");
+      const users = await resUsers.json();
+      const maxId =
+        users.length > 0
+          ? Math.max(...users.map((user) => parseInt(user.id, 10)))
+          : 999;
+      const newId = (maxId + 1).toString();
+      const userWithId = { ...newUser, id: newId };
+
+      // ..............
+      // added user to server
+      // ....................
       const response = await fetch("http://localhost:3002/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newUser),
+        body: JSON.stringify(userWithId),
       });
       const addedUser = await response.json();
       if (process.env.NODE_ENV === "development") {
