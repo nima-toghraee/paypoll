@@ -6,7 +6,7 @@ import Admin from "./Pages/Admin/Admin";
 import AdminLogin from "./Pages/Admin/AdminLogin";
 import UserSignup from "./Pages/User/UserSignup";
 import UserLogin from "./Pages/User/UserLogin";
-import Cart from "./Pages/User/cart";
+import Cart from "./Pages/Cart/Cart";
 import Dashboard from "./Pages/User/Dashboard/Dashboard";
 import ListUsers from "./Pages/Admin/AdminSidebar/ListUsers";
 import AdminChat from "./Pages/Admin/AdminHeader/AdminChat";
@@ -14,7 +14,6 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { StorageProvider } from "./contexts/StorageContext";
 import UserProfile from "./Pages/User/UserProfile/UserProfile";
 import Home from "./Pages/Home/Home";
-import { ProductsProvider } from "./contexts/UseProducts";
 
 export default function App() {
   return (

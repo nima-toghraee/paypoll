@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import { StorageContext } from "../../contexts/StorageContext";
-import Header from "../../components/Header";
+import Header from "../Home/Header/Header";
 
 export default function User() {
   const { state } = useLocation();

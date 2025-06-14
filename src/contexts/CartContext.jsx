@@ -1,6 +1,12 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useUsers } from "./useUsers";
 import { AuthContext } from "./AuthContext";
+import {
+  getCartItems,
+  createCartItem,
+  updateCartItem,
+  deleteCartItem,
+} from "../Api/Api";
 
 const CartContext = createContext();
 
@@ -10,7 +16,9 @@ export function CartProvider({ children }) {
   const [error, setError] = useState(null);
   const { isLoggedIn, currentUser } = useContext(AuthContext);
 
-  // لود سبد از سرور
+  // ...........................................
+  // Load cart items from server on mount or user change
+  // ......................................
   useEffect(() => {
     const fetchCart = async () => {
       if (!isLoggedIn || !currentUser?.id) {
@@ -19,14 +27,14 @@ export function CartProvider({ children }) {
       }
       try {
         setIsLoading(true);
-        const response = await fetch(
-          `http://localhost:3002/purchases?userId=${currentUser.id}`
-        );
-        if (!response.ok) throw new Error("خطا در دریافت سبد");
-        const data = await response.json();
-        setCartItems(data);
+        const response = await getCartItems(currentUser.id);
+        if (process.env.NODE_ENV === "development") {
+          console.log("سبد خرید لود شد:", response.data.length, "آیتم");
+        }
+        setCartItems(response.data);
       } catch (err) {
-        setError(err.message);
+        setError(err.message || "خطا در دریافت سبد");
+        console.error("خطا در لود سبد:", err.message);
       } finally {
         setIsLoading(false);
       }
@@ -34,6 +42,9 @@ export function CartProvider({ children }) {
     fetchCart();
   }, [isLoggedIn, currentUser?.id]);
 
+  // .....................................................
+  // Add a product to the cart or increment quantity if it exists
+  // ..................................................
   const addToCart = async (product) => {
     try {
       if (!isLoggedIn) throw new Error("لطفاً ابتدا وارد حساب کاربری شوید");
@@ -50,42 +61,86 @@ export function CartProvider({ children }) {
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
+        await updateCartItem(purchaseId, {
+          userId: currentUser.id,
+          productId: product.id,
+          quantity: existingItem.quantity + 1,
+          title: product.title,
+          price: product.price,
+          image: product.image,
+          category: product.category,
+        });
       } else {
         updatedItems = [
           ...cartItems,
           { ...product, productId: product.id, quantity: 1 },
         ];
-      }
-
-      setCartItems(updatedItems);
-
-      // ارسال یا آپدیت در سرور
-      const method = existingItem ? "PATCH" : "POST";
-      const url = existingItem
-        ? `http://localhost:3002/purchases/${purchaseId}`
-        : "http://localhost:3002/purchases";
-
-      await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+        await createCartItem({
           userId: currentUser.id,
           productId: product.id,
-          quantity: existingItem ? existingItem.quantity + 1 : 1,
+          quantity: 1,
           title: product.title,
           price: product.price,
           image: product.image,
           category: product.category,
-        }),
-      });
+        });
+      }
+
+      setCartItems(updatedItems);
+      if (process.env.NODE_ENV === "development") {
+        console.log("محصول به سبد اضافه شد:", product.title);
+      }
     } catch (error) {
       console.error("خطا در افزودن به سبد:", error.message);
       alert(error.message);
     }
   };
 
+  // .....................................
+  // Update the quantity of a cart item
+  // ...................................
+  const updateCartItem = async (itemId, newQuantity) => {
+    try {
+      const item = cartItems.find((item) => item.id === itemId);
+      if (!item) throw new Error("آیتم یافت نشد");
+      const response = await updateCartItem(itemId, { quantity: newQuantity });
+      if (process.env.NODE_ENV === "development") {
+        console.log("آیتم آپدیت شد:", itemId, "مقدار:", newQuantity);
+      }
+      setCartItems(
+        cartItems.map((item) => (item.id === itemId ? response.data : item))
+      );
+    } catch (err) {
+      setError("خطا در به‌روزرسانی آیتم");
+    }
+  };
+
+  // ......................................
+  // Remove an item from the cart
+  // .....................................
+  const removeCartItem = async (itemId) => {
+    try {
+      await deleteCartItem(itemId);
+      if (process.env.NODE_ENV === "development") {
+        console.log("آیتم حذف شد:", itemId);
+      }
+      setCartItems(cartItems.filter((item) => item.id !== itemId));
+    } catch (err) {
+      setError("خطا در حذف آیتم");
+    }
+  };
+
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, isLoading, error }}>
+    <CartContext.Provider
+      value={{
+        cartItems,
+        updateCartItem,
+        removeCartItem,
+        addToCart,
+        isLoading,
+        error,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

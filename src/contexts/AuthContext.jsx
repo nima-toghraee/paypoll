@@ -8,30 +8,37 @@ export const AuthProvider = ({ children }) => {
   const [isAuthLoaded, setIsAuthLoaded] = useState(false); // جدید
 
   useEffect(() => {
-    const loggedIn = sessionStorage.getItem("userLoggedIn") === "true";
-    const user = sessionStorage.getItem("currentUser");
+    const loggedIn = localStorage.getItem("userLoggedIn") === "true";
+    const user = localStorage.getItem("currentUser");
     // console.log("AuthContext loaded:", { loggedIn, user });
 
     if (loggedIn && user) {
-      setIsLoggedIn(true);
-      setCurrentUser(JSON.parse(user)); // شیء کاربر
+      try {
+        const parsedUser = JSON.parse(user);
+        setIsLoggedIn(true);
+        setCurrentUser(parsedUser);
+      } catch (e) {
+        console.error("Error parsing user from localStorage:", e);
+      }
     }
-    setIsAuthLoaded(true); // لود کامل شد
+    setIsAuthLoaded(true);
   }, []);
 
   const login = (user) => {
     console.log("Login called:", { user });
     setIsLoggedIn(true);
     setCurrentUser(user);
-    sessionStorage.setItem("userLoggedIn", "true");
-    sessionStorage.setItem("currentUser", JSON.stringify(user));
+    localStorage.setItem("userLoggedIn", "true");
+    localStorage.setItem("currentUser", JSON.stringify(user));
     console.log("Login complete:", { isLoggedIn: true, currentUser: user });
   };
 
   const logout = () => {
     setIsLoggedIn(false);
     setCurrentUser(null);
-    sessionStorage.clear();
+    localStorage.removeItem("userLoggedIn");
+    localStorage.removeItem("currentUser");
+
     console.log("Logged out");
   };
 

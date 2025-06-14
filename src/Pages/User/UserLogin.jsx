@@ -36,65 +36,81 @@ export default function UserLogin() {
   };
 
   return (
-    <div className="bg-blue-200 h-screen flex flex-col items-center justify-center gap-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center p-4">
       <div
-        className="bg-white flex flex-col items-center   lg:w-[30%] w-[80%] h-2/5  p-4 text-right"
+        className="bg-white/80 backdrop-blur-lg shadow-xl rounded-2xl lg:w-[32rem] w-full max-w-md p-8 text-right"
         dir="rtl"
       >
-        <h1 className="text-xl font-bold  ">خوش آمدید </h1>
-        <form onSubmit={handleLogin} className="space-y-4 w-full  ">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+          خوش آمدید
+        </h1>
+        <form onSubmit={handleLogin} className="space-y-6">
           <div className="relative">
-            <label className="block mb-2">نام کاربری</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              نام کاربری
+            </label>
             <input
               type="text"
               value={username}
-              placeholder="نام کاربری خود را وارد کنید"
               onChange={(e) => setUsername(e.target.value.toLowerCase())}
-              className="border border-gray-300 p-2 pr-10 w-full rounded text-right hover:border-blue-500 hover:shadow-md hover:bg-blue-50 transition-all duration-200"
+              placeholder="نام کاربری را وارد کنید"
+              className="w-full px-4 py-3 pr-10 text-right bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 hover:border-blue-300 hover:shadow-md transition-all duration-300 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
               required
               disabled={loading}
             />
             <FontAwesomeIcon
               icon={faUser}
-              className="absolute top-11 right-3 text-gray-500"
+              className="absolute top-12 right-4 text-gray-400 text-sm transition-colors duration-200"
             />
           </div>
+
           <div className="relative">
-            <label className="block mb-2">رمز کاربری</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              رمز عبور
+            </label>
             <input
               type="password"
               value={password}
-              placeholder="رمز ورود خود را وارد کنید"
               onChange={(e) => setPassword(e.target.value)}
-              className="border border-gray-300 p-2 pr-10 w-full rounded text-right hover:border-blue-500 hover:shadow-md hover:bg-blue-50 transition-all duration-200"
+              placeholder="رمز عبور را وارد کنید"
+              className="w-full px-4 py-3 pr-10 text-right bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 hover:border-blue-300 hover:shadow-md transition-all duration-300 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
               required
               disabled={loading}
             />
             <FontAwesomeIcon
               icon={faLock}
-              className="absolute top-11 right-3 text-gray-500"
+              className="absolute top-12 right-4 text-gray-400 text-sm transition-colors duration-200"
             />
           </div>
-          {error && <p className="text-red-500">{error}</p>}
-          <div className="flex gap-4">
-            {" "}
+
+          {error && (
+            <p className="text-red-500 text-sm text-center animate-fade-in">
+              {error}
+            </p>
+          )}
+
+          <div>
             <button
               type="submit"
+              className="w-full bg-blue-500 text-white py-3 rounded-lg font-medium hover:bg-blue-600 hover:scale-[1.02] focus:ring-4 focus:ring-blue-300 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={loading}
-              className="bg-blue-500 text-white w-full py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200"
             >
-              {loading ? "در حال ورود ..." : "ورود"}{" "}
+              {loading ? "در حال ورود..." : "ورود"}
             </button>
           </div>
         </form>
-      </div>
-      <div className=" text-right">
-        <p className=" text-gray-600">
-          هنوز ثبت‌نام نکرده‌اید؟{" "}
-          <Link to="/user-signup" className="text-blue-600 hover:underline">
-            اینجا ثبت‌نام کنید
-          </Link>
-        </p>
+
+        <div className="mt-6 text-center">
+          <p className="text-gray-600 text-sm">
+            هنوز ثبت‌نام نکرده‌اید؟{" "}
+            <Link
+              to="/user-signup"
+              className="text-blue-500 hover:text-blue-700 hover:underline transition-colors duration-200"
+            >
+              اینجا ثبت‌نام کنید
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -4,6 +4,15 @@
       "id": "1000",
       "username": "nima",
       "password": "123"
+    },
+    {
+      "id": "1001",
+      "username": "shima",
+      "password": "123",
+      "name": "shima",
+      "phone": "09136281348",
+      "address": "fwewf",
+      "postalCode": "0123654789"
     }
   ],
   "admin": [
@@ -15,8 +24,38 @@
   ],
   "purchases": [
     {
-      "id": "1d8c",
+      "id": "6f24",
       "userId": "1000",
+      "productId": 2,
+      "quantity": 4,
+      "title": "Mens Casual Premium Slim Fit T-Shirts ",
+      "price": 22.3,
+      "image": "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg",
+      "category": "men's clothing"
+    },
+    {
+      "id": "27c5",
+      "userId": "1000",
+      "productId": 4,
+      "quantity": 1,
+      "title": "Mens Casual Slim Fit",
+      "price": 15.99,
+      "image": "https://fakestoreapi.com/img/71YXzeOuslL._AC_UY879_.jpg",
+      "category": "men's clothing"
+    },
+    {
+      "id": "66fd",
+      "userId": "1000",
+      "productId": 10,
+      "quantity": 1,
+      "title": "SanDisk SSD PLUS 1TB Internal SSD - SATA III 6 Gb/s",
+      "price": 109,
+      "image": "https://fakestoreapi.com/img/61U7T1koQqL._AC_SX679_.jpg",
+      "category": "electronics"
+    },
+    {
+      "id": "8e5a",
+      "userId": "1001",
       "productId": 2,
       "quantity": 1,
       "title": "Mens Casual Premium Slim Fit T-Shirts ",

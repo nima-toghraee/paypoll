@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { api } from "../Api/Api";
+import { AuthContext } from "./AuthContext";
 
 export function useUserProfile(currentUser, isLoggedIn) {
   const navigate = useNavigate();
-  const { state } = useLocation();
+  const { isAuthLoaded } = useContext(AuthContext);
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -11,7 +13,7 @@ export function useUserProfile(currentUser, isLoggedIn) {
 
   // چک لاگین
   useEffect(() => {
-    if (!isLoggedIn || !currentUser) {
+    if (isAuthLoaded && (!isLoggedIn || !currentUser?.username)) {
       navigate("/user-login");
     }
   }, [isLoggedIn, currentUser, navigate]);
@@ -20,19 +22,15 @@ export function useUserProfile(currentUser, isLoggedIn) {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const res = await fetch(
-          `http://localhost:3002/users?username=${currentUser}`
-        );
-        const data = await res.json();
-        if (data.length > 0) {
-          setUserInfo(data[0]);
+        const res = await api.get(`/users?username=${currentUser.username}`);
+        if (res.data.length > 0) {
+          setUserInfo(res.data[0]);
           // اگه اطلاعات کامل نیست یا از پرداخت اومده، به حالت ویرایش برو
           if (
-            !data[0].name ||
-            !data[0].phone ||
-            !data[0].address ||
-            !data[0].postalCode ||
-            state?.fromPayment
+            !res.data[0].name ||
+            !res.data[0].phone ||
+            !res.data[0].address ||
+            !res.data[0].postalCode
           ) {
             setIsEditing(true);
           }
@@ -46,10 +44,10 @@ export function useUserProfile(currentUser, isLoggedIn) {
         setLoading(false);
       }
     };
-    if (currentUser) {
+    if (currentUser?.username) {
       fetchUserInfo();
     }
-  }, [currentUser, state]);
+  }, [currentUser]);
 
   const updateUserInfo = async (data) => {
     try {
@@ -60,21 +58,11 @@ export function useUserProfile(currentUser, isLoggedIn) {
         address: data.address,
         postalCode: data.postalCode,
       };
-      const response = await fetch(
-        `http://localhost:3002/users/${userInfo.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updatedUser),
-        }
-      );
-      const updatedData = await response.json();
-      setUserInfo(updatedData);
+      const response = await api.put(`/users/${userInfo.id}`, updatedUser);
+      setUserInfo(response.data);
       setIsEditing(false);
       alert("اطلاعات با موفقیت ذخیره شد");
-      if (state?.fromPayment) {
-        navigate("/payment");
-      }
+
       return true;
     } catch (err) {
       setError("خطا در ذخیره اطلاعات");

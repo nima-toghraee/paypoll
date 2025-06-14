@@ -1,16 +1,17 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useUserProfile } from "../../../contexts/useUserProfile";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
-import Header from "../../../components/Header";
 import LoadingError from "../../../components/LoadingError";
 import ProfileHeader from "./ProfileHeader";
 import ProfileForm from "./profileForm";
 import ProfileView from "./ProfileView";
+import Header from "../../Home/Header/Header";
 
 export default function UserProfile() {
   const { state } = useLocation(); // گرفتن state از navigate
-  const { isLoggedIn, currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { isLoggedIn, currentUser, isAuthLoaded } = useContext(AuthContext);
   const { userInfo, loading, error, isEditing, setIsEditing, updateUserInfo } =
     useUserProfile(currentUser, isLoggedIn);
 
@@ -36,28 +37,43 @@ export default function UserProfile() {
   const onEdit = () => {
     setIsEditing(true);
   };
-
   return (
-    <div className="font-sans">
-      <div className="w-[80%] sm:w-[90%] mx-auto p-6 max-w-7xl sm:p-4">
+    <div className="min-h-screen bg-gray-100" dir="rtl">
+      <header className="sticky top-0 z-10 w-[80%] mx-auto p-6 text-right max-w-screen-2xl sm:w-[90%] sm:p-4 bg-white shadow-md font-sans">
         <Header />
-      </div>
-      <div className="max-w-md mx-auto p-6" dir="rtl">
-        <LoadingError loading={loading} error={error} />
-        {!loading && !error && (
-          <>
-            <ProfileHeader fromPayment={state?.fromPayment} />
-            {isEditing ? (
-              <ProfileForm
-                userInfo={userInfo}
-                onSubmit={onSubmit}
-                onCancel={onCancel}
+      </header>
+      <div className="w-[90%] mx-auto p-4 sm:max-w-2xl sm:p-6">
+        {" "}
+        <div className="bg-white rounded-lg shadow-md p-6 sm:p-4 transition-all duration-300 hover:shadow-lg">
+          <LoadingError loading={loading} error={error} />
+          {!loading && !error && userInfo && (
+            <>
+              <ProfileHeader
+                fromPayment={state?.fromPayment}
+                className="mb-6 p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
               />
-            ) : (
-              <ProfileView userInfo={userInfo} onEdit={onEdit} />
-            )}
-          </>
-        )}
+              {isEditing ? (
+                <ProfileForm
+                  userInfo={userInfo}
+                  onSubmit={onSubmit}
+                  onCancel={onCancel}
+                  className="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+                />
+              ) : (
+                <ProfileView
+                  userInfo={userInfo}
+                  onEdit={onEdit}
+                  className="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300"
+                />
+              )}
+            </>
+          )}
+          {!loading && !error && !userInfo && (
+            <p className="text-red-600 text-center p-4 bg-red-50 rounded-lg shadow-sm animate-pulse">
+              کاربر یافت نشد. لطفاً لاگین کنید.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

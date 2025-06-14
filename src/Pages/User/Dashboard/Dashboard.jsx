@@ -1,9 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { Sidebar } from "./Sidebar";
-import UserHeader from "./UserHeader";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
-import Header from "../../../components/Header";
+import Header from "../../Home/Header/Header";
 
 export default function Dashboard() {
   const navigate = useNavigate();

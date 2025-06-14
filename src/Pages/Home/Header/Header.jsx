@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import CartIcon from "./CartIcon";
-import UserHeader from "../Pages/User/Dashboard/UserHeader";
+import CartIcon from "../../../components/CartIcon";
+import UserHeader from "./UserHeader";
 import { useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "../../../contexts/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
@@ -10,7 +10,7 @@ export default function Header() {
   const { isLoggedIn } = useContext(AuthContext);
 
   return (
-    <header className=" w-[100%] h-10 border-b-2 " dir="rtl">
+    <>
       {!isLoggedIn ? (
         <div className="flex w-[100%]  justify-between ">
           <div className=" flex gap-4">
@@ -32,6 +32,6 @@ export default function Header() {
       ) : (
         <UserHeader />
       )}
-    </header>
+    </>
   );
 }

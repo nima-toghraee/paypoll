@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import CartIcon from "../../../components/CartIcon";
-import { Sidebar } from "./Sidebar";
+import { Sidebar } from "../../User/Dashboard/Sidebar";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { FaBars } from "react-icons/fa";
@@ -16,11 +16,11 @@ export default function UserHeader() {
     navigate("/profile");
   };
 
-  console.log(" currentUser:", { currentUser });
+  // console.log(" currentUser:", { currentUser });
 
   return (
     <header
-      className="  border-b-2 flex w-full  justify-between bg-white items-center py-6  h-10"
+      className="   flex w-full  justify-between bg-white items-center py-6  h-10 "
       dir="rtl"
     >
       {" "}
