@@ -14,6 +14,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { StorageProvider } from "./contexts/StorageContext";
 import UserProfile from "./Pages/User/UserProfile/UserProfile";
 import Home from "./Pages/Home/Home";
+import CategoryPage from "./Pages/Home/Content/CategoryPage";
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/admin/chat/:username" element={<AdminChat />} />
             <Route path="/profile" element={<UserProfile />} />
+            <Route path="/category/:category" element={<CategoryPage />} />
           </Routes>
         </BrowserRouter>
       </StorageProvider>

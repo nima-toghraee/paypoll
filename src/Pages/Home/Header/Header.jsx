@@ -12,21 +12,20 @@ export default function Header() {
   return (
     <>
       {!isLoggedIn ? (
-        <div className="flex w-[100%]  justify-between ">
-          <div className=" flex gap-4">
-            <Link
-              to="/user-login"
-              className="  px-5 py-1 flex gap-2 hover:scale-110 transition-transform duration-200"
-            >
-              <FontAwesomeIcon
-                icon={faUser}
-                className="text-lg m-auto hover:scale-110 transition-transform duration-200"
-              />
-              <span>ورود/ثبت‌نام</span>
-            </Link>
-          </div>
-          <div className="my-auto ">
-            <CartIcon className=" " />
+        <div className="flex items-center justify-between w-full px-6 py-4 bg-gray-50 shadow-sm">
+          {" "}
+          <Link
+            to="/user-login"
+            className="  px-5 py-1 flex gap-2 hover:scale-110 transition-transform duration-200"
+          >
+            <FontAwesomeIcon
+              icon={faUser}
+              className="text-lg m-auto hover:scale-110 transition-transform duration-200"
+            />
+            <span>ورود/ثبت‌نام</span>
+          </Link>
+          <div className="relative ">
+            <CartIcon className="text-gray-700 hover:text-teal-500 w-6 h-6" />{" "}
           </div>
         </div>
       ) : (

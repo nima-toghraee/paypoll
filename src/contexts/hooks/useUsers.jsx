@@ -4,7 +4,7 @@ import {
   createUser,
   getUserByCredentials,
   getUsers,
-} from "../Api/Api";
+} from "../../Api/Api";
 
 export const useUsers = () => {
   const [users, setUsers] = useState([]);

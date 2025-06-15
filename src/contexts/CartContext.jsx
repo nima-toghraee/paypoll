@@ -130,6 +130,14 @@ export function CartProvider({ children }) {
     }
   };
 
+  //.........................................
+  // Calculate cart count based on cartItems
+  //.........................................
+  const cartCount = cartItems.reduce(
+    (sum, item) => sum + (item.quantity || 1),
+    0
+  );
+
   return (
     <CartContext.Provider
       value={{
@@ -139,6 +147,7 @@ export function CartProvider({ children }) {
         addToCart,
         isLoading,
         error,
+        cartCount,
       }}
     >
       {children}

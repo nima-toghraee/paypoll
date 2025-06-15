@@ -1,3 +1,4 @@
+import axios from "axios";
 import { createContext, useContext, useState, useEffect } from "react";
 
 const ProductsContext = createContext();
@@ -11,14 +12,19 @@ export function ProductsProvider({ children }) {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://fakestoreapi.com/products");
-        if (!response.ok) {
-          throw new Error("خطا در دریافت محصولات");
+        const response = await axios.get("https://fakestoreapi.com/products");
+        if (!response.data) {
+          throw new Error("هیچ داده‌ای از API دریافت نشد");
         }
-        const data = await response.json();
-        setProducts(data);
+        const data = response.data;
+        // console.log("Products from API:", data);
+        const enhancedProducts = data.map((product) => ({
+          ...product,
+          sales: Math.floor(Math.random() * 100), // تعداد فروش تصادفی بین 0 تا 99
+        }));
+        setProducts(enhancedProducts);
       } catch (err) {
-        setError(err.message);
+        setError(err.message || "خطا در ارتباط با سرور");
       } finally {
         setLoading(false);
       }

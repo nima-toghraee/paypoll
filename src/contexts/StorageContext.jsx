@@ -1,8 +1,9 @@
 import { createContext } from "react";
-import { useUsers } from "./useUsers";
-import { useAdminOrders } from "./useAdminOrders";
-import { ProductsProvider, useProducts } from "./UseProducts";
+import { useUsers } from "./hooks/useUsers";
+import { useAdminOrders } from "./hooks/useAdminOrders";
+import { ProductsProvider, useProducts } from "./ProductsContext";
 import { CartProvider, useCart } from "./CartContext"; // اصلاح تایپوگرافی
+import { SearchProvider, useSearch } from "./SearchContext";
 
 export const StorageContext = createContext();
 
@@ -10,7 +11,9 @@ export const StorageProvider = ({ children }) => {
   return (
     <ProductsProvider>
       <CartProvider>
-        <StorageContextInner>{children}</StorageContextInner>
+        <SearchProvider>
+          <StorageContextInner>{children}</StorageContextInner>
+        </SearchProvider>
       </CartProvider>
     </ProductsProvider>
   );
@@ -21,9 +24,19 @@ const StorageContextInner = ({ children }) => {
   const ordersLogic = useAdminOrders();
   const productLogic = useProducts();
   const cartLogic = useCart();
+  const searchLogic = useSearch();
 
   const isStorageLoaded =
-    userLogic.isUsersLoaded && productLogic.loading === false;
+    userLogic.isUsersLoaded &&
+    productLogic.loading === false &&
+    !productLogic.error;
+
+  if (productLogic.loading)
+    return <p className="text-center">در حال بارگذاری...</p>;
+  if (productLogic.error)
+    return (
+      <p className="text-center text-red-600">خطا: {productLogic.error}</p>
+    );
 
   return (
     <StorageContext.Provider
@@ -32,6 +45,7 @@ const StorageContextInner = ({ children }) => {
         ...ordersLogic,
         ...productLogic,
         ...cartLogic,
+        ...searchLogic,
         isStorageLoaded,
       }}
     >
