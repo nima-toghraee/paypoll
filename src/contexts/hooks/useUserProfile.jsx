@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { api } from "../Api/Api";
-import { AuthContext } from "./AuthContext";
+import { api } from "../../Api/Api";
+import { AuthContext } from "../AuthContext";
 
 export function useUserProfile(currentUser, isLoggedIn) {
   const navigate = useNavigate();

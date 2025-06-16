@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useUserProfile } from "../../../contexts/useUserProfile";
+import { useUserProfile } from "../../../contexts/hooks/useUserProfile";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
 import LoadingError from "../../../components/LoadingError";

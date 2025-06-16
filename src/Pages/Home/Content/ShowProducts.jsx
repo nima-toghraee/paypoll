@@ -4,8 +4,10 @@ import { StorageContext } from "../../../contexts/StorageContext";
 import { Link } from "react-router-dom";
 
 export default function ShowProducts() {
-  const { filteredProducts, loading, error } = useSearch();
-  const { addToCart } = useContext(StorageContext);
+  const { filteredProducts, loading, error, searchTerm } = useSearch();
+
+  console.log("عبارت جستجو:", searchTerm);
+  console.log("محصولات فیلترشده:", filteredProducts);
 
   const groupedProducts = useMemo(() => {
     const groups = {};
@@ -57,27 +59,29 @@ export default function ShowProducts() {
                   key={product.id}
                   className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
                 >
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="w-full h-48 object-contain p-4"
-                  />
+                  <Link to={`/product/${product.id}`}>
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="w-full h-48 object-contain p-4 transition-transform duration-300 hover:scale-105"
+                    />
+                  </Link>
                   <div className="p-4">
                     <h3 className="text-lg font-semibold text-gray-800 truncate">
-                      {product.title}
+                      <Link
+                        to={`/product/${product.id}`}
+                        className="hover:underline"
+                      >
+                        {product.title}
+                      </Link>
                     </h3>
+
                     <p className="text-sm text-gray-500 mt-1">
                       {product.category}
                     </p>
                     <p className="text-lg font-bold text-blue-600 mt-2">
                       ${product.price.toFixed(2)}
                     </p>
-                    <button
-                      onClick={() => addToCart(product)}
-                      className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
-                    >
-                      افزودن به سبد
-                    </button>
                   </div>
                 </div>
               ))}

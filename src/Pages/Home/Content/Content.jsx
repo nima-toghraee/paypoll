@@ -3,9 +3,10 @@ import { SearchProvider } from "../../../contexts/SearchContext";
 import SearchItems from "./SearchItems";
 import ShowProducts from "./ShowProducts";
 import { StorageContext } from "../../../contexts/StorageContext";
+import FilterItems from "./FiltereItems";
 
 export default function Content() {
-  const { products, loading, error } = useContext(StorageContext);
+  const { loading, error } = useContext(StorageContext);
 
   if (loading) {
     return (
@@ -24,15 +25,13 @@ export default function Content() {
   }
 
   return (
-    <SearchProvider products={products}>
-      <div className="p-4" dir="rtl">
-        <div>
-          <SearchItems />
-        </div>
-        <div>
-          <ShowProducts />
-        </div>
+    <div className="p-4" dir="rtl">
+      <div>
+        <FilterItems />
       </div>
-    </SearchProvider>
+      <div>
+        <ShowProducts />
+      </div>
+    </div>
   );
 }

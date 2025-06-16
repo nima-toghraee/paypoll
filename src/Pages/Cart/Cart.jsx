@@ -53,14 +53,17 @@ export default function Cart() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100" dir="rtl">
-      {" "}
-      <header className="sticky top-0 z-10 w-[80%] mx-auto p-6 text-right max-w-screen-2xl sm:w-[90%] sm:p-4 bg-white shadow-md font-sans">
+    <div
+      className="w-full min-h-screen overflow-x-hidden text-gray-800"
+      dir="rtl"
+    >
+      <header className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-md shadow-md border-b border-gray-200">
         {" "}
         <Header />
-      </header>{" "}
+      </header>
+
       <div className="w-[80%] mx-auto flex flex-col sm:flex-row gap-6 my-6 max-w-screen-2xl sm:w-[90%]">
-        <div className="w-full sm:w-[70%] flex flex-col gap-4">
+        <div className="w-full sm:w-[70%] flex flex-col gap-4 ">
           {cartItems.map((item) => (
             <CartItem
               key={item.id}
@@ -73,8 +76,10 @@ export default function Cart() {
         </div>
 
         <div className="w-full sm:w-[30%]">
-          <div className="p-6 bg-white rounded-xl shadow-md sticky top-24">
-            {" "}
+          <div
+            className="p-6 bg-white rounded-t-xl sm:rounded-xl shadow-[0_-2px_10px_rgba(0,0,0,0.1)] 
+               fixed bottom-0 left-0 right-0 z-50 sm:static sm:shadow-md sm:sticky sm:top-24"
+          >
             <p className="text-lg font-bold">مجموع: ${totalPrice.toFixed(2)}</p>
             <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200">
               ادامه خرید

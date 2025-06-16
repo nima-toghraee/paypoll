@@ -1,34 +1,45 @@
+import { useContext } from "react";
+import { SearchProvider } from "../../contexts/SearchContext";
 import Content from "./Content/Content";
 import Header from "./Header/Header";
+import { StorageContext } from "../../contexts/StorageContext";
+import MenuConainer from "./Menu/MenuContainer";
 
 export default function Home() {
+  const { products } = useContext(StorageContext);
+
   return (
-    <div
-      className="w-full grid grid-rows-[auto_1fr_auto] min-h-screen text-gray-800"
-      dir="rtl"
-    >
-      <header className="sticky top-0 z-50 w-full px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 shadow-md border-b border-gray-200">
-        {" "}
-        <Header />
-      </header>
+    <SearchProvider products={products}>
+      <div className="w-full" dir="rtl">
+        {/* Header */}
+        <header className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-md shadow-md border-b border-gray-200">
+          <Header />
+        </header>
 
-      <section
-        className="w-[80%] sm:w-[90%] mx-auto flex flex-col sm:flex-row gap-6 my-8 "
-        dir="rtl"
-      >
-        <aside className="w-full sm:w-[20%] bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-          <sideBar />
-        </aside>
+        {/* Main Content Section */}
+        <section className="w-full px-4 sm:px-8 lg:px-20 py-10">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Sidebar / Menu */}
+            <aside className="w-full lg:w-1/4">
+              <MenuConainer />
+            </aside>
 
-        <main className="w-full sm:w-[80%] bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-          {" "}
-          <Content />
-        </main>
-      </section>
+            {/* Main Product Content */}
+            <main className="w-full lg:w-3/4">
+              <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                <Content />
+              </div>
+            </main>
+          </div>
+        </section>
 
-      <footer className="w-full bg-gray-100 py-6">
-        <footer />
-      </footer>
-    </div>
+        {/* Footer */}
+        <footer className="w-full bg-gray-100 py-6 mt-auto">
+          <div className="text-center text-sm text-gray-500">
+            © 2025 فروشگاه شما
+          </div>
+        </footer>
+      </div>
+    </SearchProvider>
   );
 }

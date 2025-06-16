@@ -27,13 +27,12 @@ export function SearchProvider({ currentCategory, children }) {
           product.category.toLowerCase() === currentCategory.toLowerCase()
       );
     } else if (searchWords.length > 0) {
-      result = result.filter((product) =>
-        searchWords.every(
-          (word) =>
-            product.title.toLowerCase().includes(word) ||
-            product.description?.toLowerCase().includes(word)
-        )
-      );
+      result = result.filter((product) => {
+        const searchable = `${product.title} ${product.description ?? ""} ${
+          product.category
+        }`.toLowerCase();
+        return searchWords.every((word) => searchable.includes(word));
+      });
     }
 
     switch (sortOption) {
@@ -56,10 +55,8 @@ export function SearchProvider({ currentCategory, children }) {
         break;
     }
 
-    console.log("محصولات مرتب‌شده:", result);
     return result;
   }, [products, searchTerm, sortOption, currentCategory]);
-  console.log("filteredProducts:", filteredProducts);
 
   return (
     <SearchContext.Provider

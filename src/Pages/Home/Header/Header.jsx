@@ -5,29 +5,36 @@ import { useContext } from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import SearchItems from "../Content/SearchItems";
+import { SearchProvider } from "../../../contexts/SearchContext";
+import { StorageContext } from "../../../contexts/StorageContext";
 
 export default function Header() {
   const { isLoggedIn } = useContext(AuthContext);
+  const { products } = useContext(StorageContext);
 
   return (
     <>
       {!isLoggedIn ? (
-        <div className="flex items-center justify-between w-full px-6 py-4 bg-gray-50 shadow-sm">
-          {" "}
+        <header className=" flex justify-between items-center px-4 py-3 sm:px-6 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm ">
           <Link
-            to="/user-login"
-            className="  px-5 py-1 flex gap-2 hover:scale-110 transition-transform duration-200"
+            to="/"
+            className="text-lg font-bold text-teal-600 hover:text-teal-700 transition-colors"
           >
-            <FontAwesomeIcon
-              icon={faUser}
-              className="text-lg m-auto hover:scale-110 transition-transform duration-200"
-            />
-            <span>ورود/ثبت‌نام</span>
+            فروشگاه
           </Link>
-          <div className="relative ">
-            <CartIcon className="text-gray-700 hover:text-teal-500 w-6 h-6" />{" "}
+          <SearchItems />
+          <div className="flex items-center gap-4 ">
+            <Link
+              to="/user-login"
+              className="flex items-center gap-2 text-gray-600 hover:text-teal-600 transition-colors"
+            >
+              <FontAwesomeIcon icon={faUser} className="text-base" />
+              <span className="text-sm">ورود / ثبت‌نام</span>
+            </Link>
+            <CartIcon className="w-5 h-5 text-gray-600 hover:text-teal-600 transition-colors" />
           </div>
-        </div>
+        </header>
       ) : (
         <UserHeader />
       )}

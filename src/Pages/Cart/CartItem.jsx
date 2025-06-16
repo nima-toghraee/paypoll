@@ -2,7 +2,7 @@ import { FaTrash } from "react-icons/fa";
 
 export default function CartItem({ item, onRemove, onDecrease, onIncrease }) {
   return (
-    <div className=" debug">
+    <div className=" ">
       <img
         src={item.image}
         alt={item.title}

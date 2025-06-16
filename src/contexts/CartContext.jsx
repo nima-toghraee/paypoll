@@ -1,10 +1,9 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { useUsers } from "./useUsers";
 import { AuthContext } from "./AuthContext";
 import {
   getCartItems,
   createCartItem,
-  updateCartItem,
+  apiUpdateCartItem,
   deleteCartItem,
 } from "../Api/Api";
 
@@ -61,7 +60,7 @@ export function CartProvider({ children }) {
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
-        await updateCartItem(purchaseId, {
+        await apiUpdateCartItem(purchaseId, {
           userId: currentUser.id,
           productId: product.id,
           quantity: existingItem.quantity + 1,
@@ -71,11 +70,7 @@ export function CartProvider({ children }) {
           category: product.category,
         });
       } else {
-        updatedItems = [
-          ...cartItems,
-          { ...product, productId: product.id, quantity: 1 },
-        ];
-        await createCartItem({
+        const response = await createCartItem({
           userId: currentUser.id,
           productId: product.id,
           quantity: 1,
@@ -84,6 +79,8 @@ export function CartProvider({ children }) {
           image: product.image,
           category: product.category,
         });
+
+        updatedItems = [...cartItems, response.data];
       }
 
       setCartItems(updatedItems);
@@ -103,7 +100,9 @@ export function CartProvider({ children }) {
     try {
       const item = cartItems.find((item) => item.id === itemId);
       if (!item) throw new Error("آیتم یافت نشد");
-      const response = await updateCartItem(itemId, { quantity: newQuantity });
+      const response = await apiUpdateCartItem(itemId, {
+        quantity: newQuantity,
+      });
       if (process.env.NODE_ENV === "development") {
         console.log("آیتم آپدیت شد:", itemId, "مقدار:", newQuantity);
       }

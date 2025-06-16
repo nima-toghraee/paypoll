@@ -4,7 +4,7 @@ import AdminSidebar from "./AdminSidebar/AdminSidebar";
 import AdminHeader from "./AdminHeader/AdminHeader";
 import UserDetailsPopup from "./UserDetailsPopup";
 import { AuthContext } from "../../contexts/AuthContext";
-import { useAdminOrders } from "../../contexts/useAdminOrders";
+import { useAdminOrders } from "../../contexts/hooks/useAdminOrders";
 
 export default function Admin() {
   const navigate = useNavigate();

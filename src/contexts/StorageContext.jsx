@@ -4,6 +4,7 @@ import { useAdminOrders } from "./hooks/useAdminOrders";
 import { ProductsProvider, useProducts } from "./ProductsContext";
 import { CartProvider, useCart } from "./CartContext"; // اصلاح تایپوگرافی
 import { SearchProvider, useSearch } from "./SearchContext";
+import CommentsProvider, { useComments } from "./CommentsContext";
 
 export const StorageContext = createContext();
 
@@ -12,7 +13,9 @@ export const StorageProvider = ({ children }) => {
     <ProductsProvider>
       <CartProvider>
         <SearchProvider>
-          <StorageContextInner>{children}</StorageContextInner>
+          <CommentsProvider>
+            <StorageContextInner>{children}</StorageContextInner>
+          </CommentsProvider>
         </SearchProvider>
       </CartProvider>
     </ProductsProvider>
@@ -25,6 +28,7 @@ const StorageContextInner = ({ children }) => {
   const productLogic = useProducts();
   const cartLogic = useCart();
   const searchLogic = useSearch();
+  const commentlogic = useComments();
 
   const isStorageLoaded =
     userLogic.isUsersLoaded &&
@@ -46,6 +50,7 @@ const StorageContextInner = ({ children }) => {
         ...productLogic,
         ...cartLogic,
         ...searchLogic,
+        ...commentlogic,
         isStorageLoaded,
       }}
     >

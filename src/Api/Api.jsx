@@ -35,7 +35,26 @@ export const getCartItems = (userId) => api.get(`/purchases?userId=${userId}`);
 export const createCartItem = (item) => api.post("/purchases", item);
 
 // Update a cart item by ID
-export const updateCartItem = (id, data) => api.patch(`/purchases/${id}`, data);
+export const apiUpdateCartItem = (id, data) =>
+  api.patch(`/purchases/${id}`, data);
 
 // Delete a cart item by ID
 export const deleteCartItem = (id) => api.delete(`/purchases/${id}`);
+
+// ................................
+// comment
+// ................................
+
+export const getComment = async (productId) => {
+  console.log("📥 درخواست کامنت برای محصول:", productId);
+  const res = await api.get(`/comments?productId=${productId}`);
+  console.log("📤 پاسخ کامنت‌ها:", res.data);
+  return res;
+};
+
+export const creatComment = async (comment) => {
+  console.log("📦 ارسال کامنت به سرور:", comment);
+  const res = await api.post("/comments", comment);
+  console.log("📤 پاسخ سرور پس از ارسال کامنت:", res.data);
+  return res;
+};
